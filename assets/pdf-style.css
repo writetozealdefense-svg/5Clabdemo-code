@@ -1,0 +1,233 @@
+/* =============================================================================
+   5C Security Lab - Zeal Defense branded PDF stylesheet
+   Used by scripts/export-to-pdf.ps1 via wkhtmltopdf/weasyprint/pandoc
+   ============================================================================= */
+
+/* Zeal Defense brand colors */
+:root {
+    --zd-navy:  #0a1929;
+    --zd-cyan:  #00e5ff;
+    --zd-accent:#00b8d4;
+    --zd-text:  #1a1a1a;
+    --zd-muted: #555;
+    --zd-surface: #f5f8fb;
+    --zd-border: #d0d7de;
+}
+
+/* Cover page */
+.cover-page {
+    background: linear-gradient(180deg, var(--zd-navy) 0%, #0f2847 100%);
+    color: white;
+    text-align: center;
+    padding: 100px 40px;
+    page-break-after: always;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.cover-page img.logo {
+    max-width: 380px;
+    margin-bottom: 40px;
+}
+.cover-page h1 {
+    color: white;
+    font-size: 42px;
+    margin: 20px 0 10px;
+    letter-spacing: 1px;
+    border: none;
+}
+.cover-page h2 {
+    color: var(--zd-cyan);
+    font-size: 22px;
+    font-weight: 400;
+    margin: 10px 0 30px;
+    border: none;
+}
+.cover-page .meta {
+    color: #94a3b8;
+    font-size: 14px;
+    margin-top: 60px;
+    line-height: 1.8;
+}
+.cover-page .meta strong {
+    color: var(--zd-cyan);
+}
+.cover-page .disclaimer {
+    margin-top: 60px;
+    padding: 20px;
+    background: rgba(255, 100, 100, 0.15);
+    border-left: 4px solid #ff6b6b;
+    font-size: 13px;
+    max-width: 700px;
+    text-align: left;
+    color: #ffdddd;
+}
+
+/* Page body */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11pt;
+    line-height: 1.6;
+    color: var(--zd-text);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px;
+    background: white;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5 {
+    color: var(--zd-navy);
+    page-break-after: avoid;
+}
+h1 {
+    font-size: 26pt;
+    border-bottom: 3px solid var(--zd-cyan);
+    padding-bottom: 8px;
+    margin-top: 40px;
+    page-break-before: always;
+}
+h1:first-of-type { page-break-before: auto; }
+h2 {
+    font-size: 18pt;
+    border-bottom: 1px solid var(--zd-border);
+    padding-bottom: 4px;
+    margin-top: 30px;
+    color: var(--zd-accent);
+}
+h3 {
+    font-size: 14pt;
+    margin-top: 25px;
+}
+h4 {
+    font-size: 12pt;
+    color: var(--zd-muted);
+}
+
+/* Code blocks */
+code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 9.5pt;
+    background: #f0f4f8;
+    color: #0f172a;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--zd-border);
+}
+pre {
+    background: var(--zd-navy);
+    color: #e2e8f0;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid var(--zd-cyan);
+    overflow-x: auto;
+    page-break-inside: avoid;
+}
+pre code {
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    padding: 0;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px 0;
+    page-break-inside: avoid;
+    font-size: 10pt;
+}
+th {
+    background: var(--zd-navy);
+    color: white;
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+    border: 1px solid var(--zd-navy);
+}
+td {
+    padding: 8px 12px;
+    border: 1px solid var(--zd-border);
+    vertical-align: top;
+}
+tr:nth-child(even) td {
+    background: var(--zd-surface);
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 4px solid var(--zd-cyan);
+    background: #f0f9ff;
+    margin: 15px 0;
+    padding: 10px 15px;
+    color: var(--zd-muted);
+}
+
+/* Links */
+a {
+    color: var(--zd-accent);
+    text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Page footer (via @page) */
+@page {
+    size: A4;
+    margin: 25mm 20mm 25mm 20mm;
+    @bottom-right {
+        content: "Zeal Defense | Page " counter(page);
+        font-size: 9pt;
+        color: var(--zd-muted);
+    }
+    @bottom-left {
+        content: "5C Security Lab — CONFIDENTIAL";
+        font-size: 9pt;
+        color: var(--zd-muted);
+    }
+}
+
+/* Print-specific */
+@media print {
+    body { margin: 0; padding: 20mm; }
+    a { color: var(--zd-text); }
+    h1 { page-break-before: always; }
+}
+
+/* TOC styling */
+.toc {
+    background: var(--zd-surface);
+    border: 1px solid var(--zd-border);
+    border-radius: 6px;
+    padding: 20px 30px;
+    margin: 30px 0;
+    page-break-after: always;
+}
+.toc h2 {
+    margin-top: 0;
+    color: var(--zd-navy);
+    border-bottom: 2px solid var(--zd-cyan);
+}
+.toc ul { list-style: none; padding-left: 0; }
+.toc li { margin: 6px 0; }
+.toc a { color: var(--zd-navy); }
+
+/* Warning/Note boxes */
+.warning, .note {
+    padding: 12px 16px;
+    margin: 15px 0;
+    border-radius: 4px;
+    font-size: 10pt;
+}
+.warning {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    color: #856404;
+}
+.note {
+    background: #d1ecf1;
+    border-left: 4px solid var(--zd-cyan);
+    color: #0c5460;
+}
