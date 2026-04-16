@@ -94,6 +94,6 @@ resource "google_container_node_pool" "vuln_nodes" {
 
   management {
     auto_repair  = true
-    auto_upgrade = false
+    auto_upgrade = true # GKE requires this when release_channel is set (default: REGULAR)
   }
 }
