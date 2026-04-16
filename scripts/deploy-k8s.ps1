@@ -195,9 +195,19 @@ Write-Log "Service status:"
 kubectl get svc -n ai-governance
 
 Write-Host ""
-$NODE_IP = (kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="ExternalIP")].address}' 2>&1 | Out-String).Trim()
+# Use ConvertFrom-Json instead of jsonpath — PowerShell mangles the quotes
+# inside [?(@.type=="ExternalIP")] which breaks kubectl's jsonpath parser.
+$nodesJson = kubectl get nodes -o json | ConvertFrom-Json
+$NODE_IP = ""
+foreach ($node in $nodesJson.items) {
+    $extIP = $node.status.addresses | Where-Object { $_.type -eq "ExternalIP" } | Select-Object -First 1 -ExpandProperty address
+    if ($extIP) { $NODE_IP = $extIP; break }
+}
 if (-not $NODE_IP) {
-    $NODE_IP = (kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>&1 | Out-String).Trim()
+    foreach ($node in $nodesJson.items) {
+        $intIP = $node.status.addresses | Where-Object { $_.type -eq "InternalIP" } | Select-Object -First 1 -ExpandProperty address
+        if ($intIP) { $NODE_IP = $intIP; break }
+    }
     Write-Warn "No external node IP. Use: kubectl port-forward -n ai-governance svc/vuln-app 8080:8080"
 }
 
