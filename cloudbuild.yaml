@@ -1,0 +1,60 @@
+# =============================================================================
+# 5C Security Lab - Google Cloud Build Configuration
+#
+# Builds both Docker images in Cloud Build (no local Docker required)
+# and pushes them to Google Container Registry.
+#
+# Usage:
+#   gcloud builds submit --config cloudbuild.yaml \
+#     --substitutions=_PROJECT_ID=$PROJECT_ID .
+#
+# Or with the active gcloud project:
+#   gcloud builds submit --config cloudbuild.yaml .
+# =============================================================================
+
+steps:
+  # Build the vulnerable Flask application image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-f"
+      - "docker/Dockerfile.app"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/vuln-app:latest"
+      - "."
+    id: "build-app"
+
+  # Build the vulnerable AI service image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-f"
+      - "docker/Dockerfile.ai"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/vuln-ai-service:latest"
+      - "."
+    id: "build-ai"
+
+  # Push both images
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/vuln-app:latest"]
+    id: "push-app"
+    waitFor: ["build-app"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/vuln-ai-service:latest"]
+    id: "push-ai"
+    waitFor: ["build-ai"]
+
+# Register images in Cloud Build output
+images:
+  - "gcr.io/$PROJECT_ID/vuln-app:latest"
+  - "gcr.io/$PROJECT_ID/vuln-ai-service:latest"
+
+# Use a larger machine for faster builds (optional)
+options:
+  machineType: "E2_HIGHCPU_8"
+  logging: CLOUD_LOGGING_ONLY
+
+# Timeout (default 10 min, this gives us 20)
+timeout: "1200s"
