@@ -6,6 +6,9 @@ terraform/tfplan
 terraform/.terraform/
 terraform/.terraform.lock.hcl
 
+# PDF build output (generated locally, not tracked)
+build/
+
 # Python
 __pycache__/
 *.py[cod]
