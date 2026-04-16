@@ -46,6 +46,15 @@ section() {
 }
 
 # -----------------------------------------------------------------------------
+# Step 0: Safety Checks — do not run as root
+# -----------------------------------------------------------------------------
+if [ "$(id -u)" -eq 0 ]; then
+    fail "Do NOT run this script with sudo or as root. Run as your regular user.
+    Reason: gcloud/docker credentials are per-user. Running as root bypasses
+    your existing authentication and can't access the Google OAuth flow."
+fi
+
+# -----------------------------------------------------------------------------
 # Step 1: Prerequisite Check
 # -----------------------------------------------------------------------------
 section "Step 1/11: Checking Prerequisites"
@@ -61,6 +70,15 @@ for cmd in gcloud terraform kubectl docker; do
 done
 [ "$MISSING" -eq 0 ] || fail "Install missing prerequisites and re-run"
 
+# Detect if we have a browser/display available
+HEADLESS=0
+if [ -z "${DISPLAY:-}" ] || ! command -v xdg-open >/dev/null 2>&1 || \
+   ! (command -v firefox >/dev/null 2>&1 || command -v chromium >/dev/null 2>&1 || \
+      command -v google-chrome >/dev/null 2>&1 || command -v chromium-browser >/dev/null 2>&1); then
+    HEADLESS=1
+    warn "No browser detected — using headless OAuth flow (--no-launch-browser)"
+fi
+
 # -----------------------------------------------------------------------------
 # Step 2: Verify gcloud Authentication
 # -----------------------------------------------------------------------------
@@ -68,8 +86,14 @@ section "Step 2/11: Verifying gcloud Authentication"
 
 if ! gcloud auth list --filter="status:ACTIVE" --format="value(account)" 2>/dev/null | grep -q "@"; then
     warn "No active gcloud session found"
-    log "Running: gcloud auth login"
-    gcloud auth login
+    if [ "$HEADLESS" -eq 1 ]; then
+        log "Running headless: gcloud auth login --no-launch-browser"
+        log "You'll get a URL — open it on ANY machine with a browser, paste the code back here."
+        gcloud auth login --no-launch-browser
+    else
+        log "Running: gcloud auth login"
+        gcloud auth login
+    fi
 fi
 ACTIVE_ACCOUNT=$(gcloud auth list --filter="status:ACTIVE" --format="value(account)" | head -1)
 ok "Active account: $ACTIVE_ACCOUNT"
@@ -82,8 +106,13 @@ section "Step 3/11: Verifying Application Default Credentials"
 ADC_PATH="$HOME/.config/gcloud/application_default_credentials.json"
 if [ ! -f "$ADC_PATH" ]; then
     warn "ADC not configured. Terraform needs this."
-    log "Running: gcloud auth application-default login"
-    gcloud auth application-default login
+    if [ "$HEADLESS" -eq 1 ]; then
+        log "Running headless: gcloud auth application-default login --no-launch-browser"
+        gcloud auth application-default login --no-launch-browser
+    else
+        log "Running: gcloud auth application-default login"
+        gcloud auth application-default login
+    fi
 fi
 
 if gcloud auth application-default print-access-token >/dev/null 2>&1; then
