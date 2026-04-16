@@ -182,11 +182,11 @@ Write-Host ""
 Write-Host "  Application:" -ForegroundColor Cyan
 foreach ($ip in $nodeExtIPs) {
     Write-Label "    http://"; Write-Value "${ip}:30080"
-    Write-Host "      └─ /health?check=basic" -ForegroundColor Gray
-    Write-Host "      └─ /search?q=SAMA" -ForegroundColor Gray
-    Write-Host "      └─ /download?file=X" -ForegroundColor Gray
-    Write-Host "      └─ /fetch (POST)" -ForegroundColor Gray
-    Write-Host "      └─ /ai/query (POST)" -ForegroundColor Gray
+    Write-Host "      -> /health?check=basic" -ForegroundColor Gray
+    Write-Host "      -> /search?q=SAMA" -ForegroundColor Gray
+    Write-Host "      -> /download?file=X" -ForegroundColor Gray
+    Write-Host "      -> /fetch (POST)" -ForegroundColor Gray
+    Write-Host "      -> /ai/query (POST)" -ForegroundColor Gray
 }
 
 Write-Host ""

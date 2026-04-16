@@ -44,6 +44,6 @@ ENV JWT_SECRET="jwt-weak-secret"
 # VULNERABILITY: No HEALTHCHECK instruction
 # VULNERABILITY: No read-only filesystem enforced
 
-EXPOSE 8080
+EXPOSE 18080
 
 CMD ["python", "main.py"]

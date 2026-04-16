@@ -14,5 +14,5 @@ spec:
     app: vuln-app
   ports:
     - port: 8080
-      targetPort: 8080
+      targetPort: 18080
       nodePort: 30080

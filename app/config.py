@@ -26,4 +26,6 @@ GCS_BUCKET = os.getenv("GCS_BUCKET", "vuln-ai-governance-data")
 
 # Application settings
 HOST = "0.0.0.0"
-PORT = 8080
+# Port 18080 (not 8080) to avoid conflict with GKE node services
+# when running with hostNetwork: true (a deliberate vulnerability for Lab 07).
+PORT = int(os.getenv("APP_PORT", "18080"))

@@ -33,7 +33,7 @@ spec:
         - name: vuln-app
           image: REPLACE_APP_IMAGE
           ports:
-            - containerPort: 8080
+            - containerPort: 18080
           env:
             - name: AI_SERVICE_URL
               value: "http://ai-service.ai-governance.svc.cluster.local:8081"
