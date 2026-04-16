@@ -18,7 +18,14 @@
 #   $env:BUCKET_NAME  - GCS bucket (default: vuln-ai-governance-data-<PROJECT_ID>)
 # =============================================================================
 
-$ErrorActionPreference = "Stop"
+# Use Continue (not Stop) so that benign stderr output from native commands
+# (e.g. gcloud WARNINGs) doesn't terminate the script. We check $LASTEXITCODE
+# explicitly after each native call instead.
+$ErrorActionPreference = "Continue"
+
+# In PowerShell 7.3+, this prevents stderr output being treated as an error.
+# In older versions, the setting is silently ignored.
+$PSNativeCommandUseErrorActionPreference = $false
 
 # -----------------------------------------------------------------------------
 # Helper functions
@@ -70,7 +77,7 @@ Write-Section "Step 2/6: Resolving Configuration"
 # PROJECT_ID
 $PROJECT_ID = $env:PROJECT_ID
 if (-not $PROJECT_ID) {
-    try { $PROJECT_ID = (gcloud config get-value project 2>$null).Trim() } catch { $PROJECT_ID = "" }
+    $PROJECT_ID = (gcloud config get-value project 2>&1 | Out-String).Trim()
 }
 if (-not $PROJECT_ID -or $PROJECT_ID -eq "(unset)") {
     Write-Fail "Cannot determine PROJECT_ID. Set it: `$env:PROJECT_ID = 'your-project-id'"
@@ -95,14 +102,14 @@ Write-Log "AI image:    $AI_IMAGE"
 # -----------------------------------------------------------------------------
 Write-Section "Step 3/6: Verifying Preconditions"
 
-$null = gcloud container clusters describe $CLUSTER_NAME --zone $ZONE --project $PROJECT_ID 2>$null
+gcloud container clusters describe $CLUSTER_NAME --zone $ZONE --project $PROJECT_ID 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) {
     Write-Fail "GKE cluster '$CLUSTER_NAME' not found in $ZONE.`n    Run terraform apply first."
 }
 Write-Ok "GKE cluster '$CLUSTER_NAME' exists"
 
 foreach ($img in @("vuln-app", "vuln-ai-service")) {
-    $null = gcloud container images describe "gcr.io/$PROJECT_ID/${img}:latest" 2>$null
+    gcloud container images describe "gcr.io/$PROJECT_ID/${img}:latest" 2>&1 | Out-Null
     if ($LASTEXITCODE -ne 0) {
         Write-Fail "Image gcr.io/$PROJECT_ID/${img}:latest not found in GCR.`n    Build via: gcloud builds submit --config cloudbuild.yaml ."
     }
@@ -118,7 +125,7 @@ Write-Log "Fetching cluster credentials..."
 gcloud container clusters get-credentials $CLUSTER_NAME --zone $ZONE --project $PROJECT_ID
 if ($LASTEXITCODE -ne 0) { Write-Fail "Failed to get cluster credentials" }
 
-$null = kubectl cluster-info 2>$null
+kubectl cluster-info 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) { Write-Fail "kubectl cannot connect to the cluster" }
 Write-Ok "kubectl connected to $CLUSTER_NAME"
 
@@ -188,9 +195,9 @@ Write-Log "Service status:"
 kubectl get svc -n ai-governance
 
 Write-Host ""
-$NODE_IP = (kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="ExternalIP")].address}' 2>$null).Trim()
+$NODE_IP = (kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="ExternalIP")].address}' 2>&1 | Out-String).Trim()
 if (-not $NODE_IP) {
-    $NODE_IP = (kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}').Trim()
+    $NODE_IP = (kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>&1 | Out-String).Trim()
     Write-Warn "No external node IP. Use: kubectl port-forward -n ai-governance svc/vuln-app 8080:8080"
 }
 
