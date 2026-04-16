@@ -1,3 +1,7 @@
+# setuptools must be listed explicitly: google-cloud-aiplatform 1.38.0 uses
+# pkg_resources internally, which was removed from Python stdlib in 3.12+.
+# Without this, the container crashes with ModuleNotFoundError: pkg_resources.
+setuptools>=69.0.0
 flask==3.0.0
 google-cloud-aiplatform==1.38.0
 chromadb==0.4.22
