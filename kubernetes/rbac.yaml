@@ -1,0 +1,45 @@
+# =============================================================================
+# 5C Security Lab - RBAC Configuration
+# VULNERABILITIES:
+#   - ClusterRole with wildcard permissions (NCA-ECC 1-1-3)
+#   - Bound to application SA in multiple namespaces (NCA-ECC 2-3-2)
+#   - Violates least privilege principle (SAMA-CSF 3.2.1)
+# =============================================================================
+
+# VULNERABILITY: ClusterRole with full cluster access
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vuln-cluster-admin
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+# VULNERABILITY: Binding cluster-admin to app SA in ai-governance namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vuln-app-cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: vuln-app-sa
+    namespace: ai-governance
+roleRef:
+  kind: ClusterRole
+  name: vuln-cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+# VULNERABILITY: Same overly permissive binding in finance-prod namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vuln-app-cluster-admin-prod
+subjects:
+  - kind: ServiceAccount
+    name: vuln-app-sa
+    namespace: finance-prod
+roleRef:
+  kind: ClusterRole
+  name: vuln-cluster-admin
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,4 @@
+flask==3.0.0
+google-cloud-aiplatform==1.38.0
+chromadb==0.4.22
+google-cloud-storage==2.14.0

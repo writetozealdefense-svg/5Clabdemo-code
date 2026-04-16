@@ -1,0 +1,29 @@
+# Terraform state (contains SA keys and sensitive data)
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars
+terraform/tfplan
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+
+# Python
+__pycache__/
+*.py[cod]
+*.db
+
+# Application state
+app/governance.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code state
+.claude/
+
+# Docker
+.dockerignore

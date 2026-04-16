@@ -1,0 +1,189 @@
+{
+  "_metadata": {
+    "notice": "SYNTHETIC DATA - FOR SECURITY TRAINING ONLY",
+    "description": "This file contains entirely fictional PII data for lab exercises. No real individuals are represented.",
+    "generated": "2024-01-15"
+  },
+  "customers": [
+    {
+      "id": "CUST-001",
+      "name": "Ahmed Al-Rashidi",
+      "national_id": "1098234567",
+      "iban": "SA0380000000608010167519",
+      "phone": "+966501234567",
+      "email": "ahmed.r@fakemail.sa",
+      "risk_score": 72
+    },
+    {
+      "id": "CUST-002",
+      "name": "Fatima Al-Zahrani",
+      "national_id": "1087654321",
+      "iban": "SA4420000001234567891234",
+      "phone": "+966559876543",
+      "email": "fatima.z@fakemail.sa",
+      "risk_score": 15
+    },
+    {
+      "id": "CUST-003",
+      "name": "Khalid bin Saud",
+      "national_id": "1076543210",
+      "iban": "SA6010000020012345678901",
+      "phone": "+966541122334",
+      "email": "khalid.s@fakemail.sa",
+      "risk_score": 88
+    },
+    {
+      "id": "CUST-004",
+      "name": "Nora Al-Otaibi",
+      "national_id": "1065432109",
+      "iban": "SA8050000000012345678901",
+      "phone": "+966533445566",
+      "email": "nora.o@fakemail.sa",
+      "risk_score": 33
+    },
+    {
+      "id": "CUST-005",
+      "name": "Omar Al-Ghamdi",
+      "national_id": "1054321098",
+      "iban": "SA3080000000608019876543",
+      "phone": "+966527788990",
+      "email": "omar.g@fakemail.sa",
+      "risk_score": 56
+    },
+    {
+      "id": "CUST-006",
+      "name": "Layla Al-Harbi",
+      "national_id": "1043210987",
+      "iban": "SA1240000000608010112233",
+      "phone": "+966519900112",
+      "email": "layla.h@fakemail.sa",
+      "risk_score": 91
+    },
+    {
+      "id": "CUST-007",
+      "name": "Yusuf Al-Dosari",
+      "national_id": "1032109876",
+      "iban": "SA7560000000012349876543",
+      "phone": "+966545566778",
+      "email": "yusuf.d@fakemail.sa",
+      "risk_score": 44
+    },
+    {
+      "id": "CUST-008",
+      "name": "Maryam Al-Shehri",
+      "national_id": "1021098765",
+      "iban": "SA5580000000608012345678",
+      "phone": "+966537788994",
+      "email": "maryam.s@fakemail.sa",
+      "risk_score": 67
+    },
+    {
+      "id": "CUST-009",
+      "name": "Hassan Al-Qahtani",
+      "national_id": "1010987654",
+      "iban": "SA9010000020098765432109",
+      "phone": "+966521234567",
+      "email": "hassan.q@fakemail.sa",
+      "risk_score": 29
+    },
+    {
+      "id": "CUST-010",
+      "name": "Reem Al-Mutairi",
+      "national_id": "1009876543",
+      "iban": "SA2220000001234509876543",
+      "phone": "+966558899001",
+      "email": "reem.m@fakemail.sa",
+      "risk_score": 78
+    },
+    {
+      "id": "CUST-011",
+      "name": "Tariq Al-Subaie",
+      "national_id": "1098765432",
+      "iban": "SA6380000000608014455667",
+      "phone": "+966543322110",
+      "email": "tariq.s@fakemail.sa",
+      "risk_score": 51
+    },
+    {
+      "id": "CUST-012",
+      "name": "Huda Al-Juhani",
+      "national_id": "1087654322",
+      "iban": "SA4850000000012347788990",
+      "phone": "+966535566778",
+      "email": "huda.j@fakemail.sa",
+      "risk_score": 83
+    },
+    {
+      "id": "CUST-013",
+      "name": "Salman Al-Enazi",
+      "national_id": "1076543211",
+      "iban": "SA7340000000608010223344",
+      "phone": "+966522334455",
+      "email": "salman.e@fakemail.sa",
+      "risk_score": 19
+    },
+    {
+      "id": "CUST-014",
+      "name": "Aisha Al-Tamimi",
+      "national_id": "1065432110",
+      "iban": "SA1660000000012341122334",
+      "phone": "+966511223344",
+      "email": "aisha.t@fakemail.sa",
+      "risk_score": 62
+    },
+    {
+      "id": "CUST-015",
+      "name": "Ibrahim Al-Dossary",
+      "national_id": "1054321099",
+      "iban": "SA9280000000608015566778",
+      "phone": "+966549988776",
+      "email": "ibrahim.d@fakemail.sa",
+      "risk_score": 45
+    },
+    {
+      "id": "CUST-016",
+      "name": "Sara Al-Shahrani",
+      "national_id": "1043210988",
+      "iban": "SA3510000020056789012345",
+      "phone": "+966538877665",
+      "email": "sara.sh@fakemail.sa",
+      "risk_score": 95
+    },
+    {
+      "id": "CUST-017",
+      "name": "Mohammed Al-Balawi",
+      "national_id": "1032109877",
+      "iban": "SA5820000001234543210987",
+      "phone": "+966524455667",
+      "email": "mohammed.b@fakemail.sa",
+      "risk_score": 37
+    },
+    {
+      "id": "CUST-018",
+      "name": "Nouf Al-Anazi",
+      "national_id": "1021098766",
+      "iban": "SA8140000000608019988776",
+      "phone": "+966556677889",
+      "email": "nouf.a@fakemail.sa",
+      "risk_score": 71
+    },
+    {
+      "id": "CUST-019",
+      "name": "Abdullah Al-Khaldi",
+      "national_id": "1010987655",
+      "iban": "SA2450000000012346677889",
+      "phone": "+966547766554",
+      "email": "abdullah.k@fakemail.sa",
+      "risk_score": 58
+    },
+    {
+      "id": "CUST-020",
+      "name": "Dalal Al-Harthy",
+      "national_id": "1009876544",
+      "iban": "SA6760000000012343344556",
+      "phone": "+966533221100",
+      "email": "dalal.h@fakemail.sa",
+      "risk_score": 86
+    }
+  ]
+}

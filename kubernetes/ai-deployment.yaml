@@ -1,0 +1,43 @@
+# =============================================================================
+# 5C Security Lab - AI Service Deployment
+# VULNERABILITIES:
+#   - privileged: true
+#   - runAsUser: 0 (root)
+#   - No resource limits
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-service
+  namespace: ai-governance
+  labels:
+    app: ai-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-service
+  template:
+    metadata:
+      labels:
+        app: ai-service
+    spec:
+      serviceAccountName: vuln-app-sa
+      containers:
+        - name: ai-service
+          image: REPLACE_AI_IMAGE
+          ports:
+            - containerPort: 8081
+          env:
+            - name: GCP_PROJECT_ID
+              value: "REPLACE_PROJECT_ID"
+            - name: GCP_REGION
+              value: "us-central1"
+            - name: PII_DATA_PATH
+              value: "/app/data/sample_pii.json"
+            - name: KNOWLEDGE_BASE_DIR
+              value: "/app/data/knowledge_base"
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          resources: {}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GCC AI Governance Dashboard</title>
+    <!-- VULNERABILITY: No Content-Security-Policy header or meta tag -->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .header { background: #1a237e; color: white; padding: 20px; margin: -20px -20px 20px; }
+        .header h1 { margin: 0; }
+        .header p { margin: 5px 0 0; opacity: 0.8; }
+        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .card h2 { margin-top: 0; color: #1a237e; }
+        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; margin: 5px 0 10px; }
+        button { background: #1a237e; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #283593; }
+        .result { background: #f5f5f5; padding: 15px; border-radius: 4px; margin-top: 10px; white-space: pre-wrap; font-family: monospace; }
+        .status { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 14px; }
+        .status-healthy { background: #c8e6c9; color: #2e7d32; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .warning { background: #fff3e0; border-left: 4px solid #ff9800; padding: 10px 15px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GCC AI Governance Dashboard</h1>
+        <p>SAMA-CSF | NCA-ECC | PDPL Compliance Platform</p>
+    </div>
+
+    <div class="warning">
+        <strong>Lab Environment</strong> - This application contains intentional security vulnerabilities for training purposes.
+    </div>
+
+    <div class="grid">
+        <!-- Health Check -->
+        <div class="card">
+            <h2>System Health</h2>
+            <p>Check Type:</p>
+            <input type="text" id="healthCheck" value="basic" placeholder="Enter check type">
+            <button onclick="checkHealth()">Run Health Check</button>
+            <div id="healthResult" class="result" style="display:none"></div>
+        </div>
+
+        <!-- Policy Search -->
+        <div class="card">
+            <h2>Policy Search</h2>
+            <p>Search compliance policies:</p>
+            <input type="text" id="searchQuery" placeholder="Search policies...">
+            <button onclick="searchPolicies()">Search</button>
+            <div id="searchResult" class="result" style="display:none"></div>
+        </div>
+
+        <!-- File Download -->
+        <div class="card">
+            <h2>Document Download</h2>
+            <p>File path:</p>
+            <input type="text" id="filePath" placeholder="Enter document path">
+            <button onclick="downloadFile()">Download</button>
+            <div id="downloadResult" class="result" style="display:none"></div>
+        </div>
+
+        <!-- SSRF Test -->
+        <div class="card">
+            <h2>External Resource Fetch</h2>
+            <p>URL to fetch:</p>
+            <input type="text" id="fetchUrl" placeholder="Enter URL">
+            <button onclick="fetchResource()">Fetch</button>
+            <div id="fetchResult" class="result" style="display:none"></div>
+        </div>
+    </div>
+
+    <!-- AI Query (full width) -->
+    <div class="card">
+        <h2>AI Governance Assistant</h2>
+        <p>Ask about GCC compliance, customer risk scores, or policy details:</p>
+        <textarea id="aiQuery" rows="3" placeholder="Enter your question..."></textarea>
+        <button onclick="queryAI()">Ask AI</button>
+        <!-- VULNERABILITY: AI response rendered with innerHTML (XSS via AI output) -->
+        <div id="aiResult" class="result" style="display:none"></div>
+    </div>
+
+    <script>
+        // VULNERABILITY: No CSRF tokens on any requests
+        // VULNERABILITY: No input sanitization in JavaScript
+
+        function showResult(elementId, data) {
+            var el = document.getElementById(elementId);
+            el.style.display = 'block';
+            // VULNERABILITY: Using innerHTML allows XSS via server responses
+            el.innerHTML = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        }
+
+        function checkHealth() {
+            var check = document.getElementById('healthCheck').value;
+            fetch('/health?check=' + encodeURIComponent(check))
+                .then(function(r) { return r.json(); })
+                .then(function(d) { showResult('healthResult', JSON.stringify(d, null, 2)); });
+        }
+
+        function searchPolicies() {
+            var q = document.getElementById('searchQuery').value;
+            fetch('/search?q=' + encodeURIComponent(q))
+                .then(function(r) { return r.json(); })
+                .then(function(d) { showResult('searchResult', JSON.stringify(d, null, 2)); });
+        }
+
+        function downloadFile() {
+            var path = document.getElementById('filePath').value;
+            fetch('/download?file=' + encodeURIComponent(path))
+                .then(function(r) {
+                    if (r.ok) return r.text();
+                    return r.json().then(function(d) { return JSON.stringify(d); });
+                })
+                .then(function(d) { showResult('downloadResult', d); });
+        }
+
+        function fetchResource() {
+            var url = document.getElementById('fetchUrl').value;
+            fetch('/fetch', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({url: url})
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(d) { showResult('fetchResult', JSON.stringify(d, null, 2)); });
+        }
+
+        function queryAI() {
+            var prompt = document.getElementById('aiQuery').value;
+            fetch('/ai/query', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({prompt: prompt})
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                // VULNERABILITY: Rendering AI response as HTML without sanitization
+                showResult('aiResult', d.response || JSON.stringify(d, null, 2));
+            });
+        }
+    </script>
+</body>
+</html>

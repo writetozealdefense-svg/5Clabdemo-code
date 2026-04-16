@@ -1,0 +1,15 @@
+# =============================================================================
+# 5C Security Lab - AI Service (ClusterIP - internal only)
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-service
+  namespace: ai-governance
+spec:
+  type: ClusterIP
+  selector:
+    app: ai-service
+  ports:
+    - port: 8081
+      targetPort: 8081

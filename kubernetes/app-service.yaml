@@ -1,0 +1,18 @@
+# =============================================================================
+# 5C Security Lab - Application Service
+# VULNERABILITY: NodePort exposed externally (SAMA-CSF 3.2)
+#   Combined with 0.0.0.0/0 firewall rule, this is internet-accessible
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: vuln-app
+  namespace: ai-governance
+spec:
+  type: NodePort
+  selector:
+    app: vuln-app
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30080

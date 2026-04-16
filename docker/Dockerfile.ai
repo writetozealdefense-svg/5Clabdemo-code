@@ -1,0 +1,32 @@
+# =============================================================================
+# 5C Security Lab - Vulnerable AI Service Dockerfile
+# VULNERABILITIES:
+#   - FROM python:latest (mutable tag)
+#   - Runs as root
+#   - Installs unnecessary tools
+#   - No HEALTHCHECK
+# =============================================================================
+
+FROM python:latest
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    net-tools \
+    dnsutils \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY ai/ /app/
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+ENV GCP_PROJECT_ID=""
+ENV GCP_REGION="us-central1"
+ENV PII_DATA_PATH="/app/data/sample_pii.json"
+ENV KNOWLEDGE_BASE_DIR="/app/data/knowledge_base"
+
+EXPOSE 8081
+
+CMD ["python", "ai_service.py"]

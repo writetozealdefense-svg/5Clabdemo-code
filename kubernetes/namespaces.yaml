@@ -1,0 +1,20 @@
+# =============================================================================
+# 5C Security Lab - Kubernetes Namespaces
+# VULNERABILITY: No Pod Security Standards labels (SAMA-CSF 3.3.3)
+#   Missing: pod-security.kubernetes.io/enforce: restricted
+# =============================================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai-governance
+  labels:
+    environment: vulnerable-lab
+    project: 5c-security-demo
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: finance-prod
+  labels:
+    environment: vulnerable-lab
+    project: 5c-security-demo

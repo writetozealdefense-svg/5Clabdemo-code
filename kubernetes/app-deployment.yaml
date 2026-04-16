@@ -1,0 +1,52 @@
+# =============================================================================
+# 5C Security Lab - Application Deployment
+# VULNERABILITIES:
+#   - privileged: true (NCA-ECC 2-3-1)
+#   - runAsUser: 0 (root) (NCA-ECC 2-3-1)
+#   - hostNetwork: true (exposes host network namespace)
+#   - No resource limits (K04: denial of service risk)
+#   - No readOnlyRootFilesystem
+#   - No seccomp profile
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vuln-app
+  namespace: ai-governance
+  labels:
+    app: vuln-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vuln-app
+  template:
+    metadata:
+      labels:
+        app: vuln-app
+    spec:
+      serviceAccountName: vuln-app-sa
+      # VULNERABILITY: Host network gives access to node's network namespace
+      # Enables direct metadata service access and node-level network scanning
+      hostNetwork: true
+      containers:
+        - name: vuln-app
+          image: REPLACE_APP_IMAGE
+          ports:
+            - containerPort: 8080
+          env:
+            - name: AI_SERVICE_URL
+              value: "http://ai-service.ai-governance.svc.cluster.local:8081"
+            - name: GCS_BUCKET
+              value: "REPLACE_BUCKET_NAME"
+            - name: SECRET_KEY
+              value: "super-secret-key-do-not-share-2024"
+            - name: ADMIN_PASSWORD
+              value: "admin123"
+          securityContext:
+            # VULNERABILITY: Privileged container - full host device access
+            privileged: true
+            # VULNERABILITY: Running as root
+            runAsUser: 0
+          # VULNERABILITY: No resource limits - allows resource exhaustion
+          resources: {}
