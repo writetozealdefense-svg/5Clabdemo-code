@@ -1,0 +1,19 @@
+# Force LF line endings for shell scripts (required to run on Linux)
+*.sh text eol=lf
+scripts/* text eol=lf
+
+# Terraform and config files
+*.tf text eol=lf
+*.tfvars text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Python
+*.py text eol=lf
+
+# Dockerfiles
+Dockerfile* text eol=lf
+
+# Markdown and text
+*.md text
+*.txt text
