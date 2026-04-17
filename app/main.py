@@ -55,6 +55,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/lab")
+def lab_dashboard():
+    return render_template("dashboard.html")
+
+
 # VULNERABILITY: OS Command Injection (OWASP A03:2021)
 # User input passed directly to shell via subprocess with shell=True
 @app.route("/health")
