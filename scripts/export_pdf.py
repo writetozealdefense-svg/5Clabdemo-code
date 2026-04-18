@@ -215,6 +215,80 @@ tbody tr:last-child td {
     background: #eef2f6;
 }
 
+/* ============================================================
+   DARK THEME for the FINAL Compliance Breach Summary table
+   (forced onto its own page)
+   ============================================================ */
+
+/* Force the final summary heading onto a new page */
+h2:last-of-type {
+    page-break-before: always;
+    padding-top: 40pt;
+    color: #0a1929;
+    font-size: 17pt;
+    text-align: center;
+    border-bottom: 3pt solid #00838f;
+    padding-bottom: 10pt;
+    margin-bottom: 20pt;
+}
+
+/* Dark theme - target the last table */
+table:last-of-type {
+    background: #0a1929 !important;
+    border: 1pt solid #00838f !important;
+    border-radius: 4pt;
+    margin-top: 18pt;
+    margin-bottom: 24pt;
+    page-break-inside: avoid;
+    box-shadow: 0 2pt 8pt rgba(0,0,0,0.3);
+}
+
+table:last-of-type th {
+    background: #00838f !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    padding: 10pt 12pt !important;
+    font-size: 8.5pt;
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+    border: 0 !important;
+}
+
+table:last-of-type td {
+    background: #0a1929 !important;
+    color: #e2e8f0 !important;
+    padding: 9pt 12pt !important;
+    border: 0 !important;
+    border-bottom: 0.5pt solid #1e3a5f !important;
+    font-size: 8.5pt;
+    vertical-align: middle;
+}
+
+table:last-of-type tr:nth-child(even) td {
+    background: #0f2847 !important;
+}
+
+table:last-of-type tbody tr:last-child td {
+    background: #00838f !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 9pt;
+    letter-spacing: 0.3pt;
+    border-bottom: 0 !important;
+    text-transform: uppercase;
+}
+
+/* First column of the dark summary table - highlight Layer names */
+table:last-of-type tbody td:first-child {
+    font-weight: 700;
+    color: #00e5ff !important;
+    letter-spacing: 0.5pt;
+}
+
+table:last-of-type tbody tr:last-child td:first-child {
+    color: #ffffff !important;
+}
+
 /* --- HORIZONTAL RULES: completely invisible, page break only --- */
 hr {
     border: 0 !important;
