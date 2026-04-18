@@ -58,14 +58,15 @@ h1 {
     font-size: 20pt;
     color: #00838f;
     font-weight: 700;
-    padding-bottom: 0;
-    padding-top: 0;
+    padding-bottom: 12pt;
+    padding-top: 24pt;
     margin-top: 0;
     margin-bottom: 24pt;
     page-break-before: always;
-    border-top: 0;
-    border-bottom: 0;
-    background: transparent;
+    border: 0;
+    background: #ffffff;
+    display: block;
+    width: 100%;
 }
 
 /* Don't page-break before the very first heading */
@@ -131,7 +132,7 @@ code {
     border-radius: 2pt;
 }
 
-/* --- CODE BLOCKS (crucial fix: spacing + no overlap) --- */
+/* --- CODE BLOCKS --- */
 pre {
     background: #0a1929;
     color: #e2e8f0;
@@ -144,7 +145,7 @@ pre {
     word-wrap: break-word;
     page-break-inside: avoid;
     margin-top: 8pt;
-    margin-bottom: 28pt;
+    margin-bottom: 32pt;
     clear: both;
 }
 
