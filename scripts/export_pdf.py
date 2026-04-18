@@ -56,11 +56,12 @@ h1, h2, h3, h4, h5 {
 
 h1 {
     font-size: 20pt;
-    border-bottom: 3px solid #00b8d4;
-    padding-bottom: 8pt;
-    padding-top: 10pt;
+    color: #0a1929;
+    font-weight: 800;
+    padding-bottom: 0;
+    padding-top: 0;
     margin-top: 0;
-    margin-bottom: 14pt;
+    margin-bottom: 24pt;
     page-break-before: always;
 }
 
@@ -70,20 +71,25 @@ body > h1:first-child {
     page-break-before: auto;
 }
 
+
 h2 {
     font-size: 15pt;
-    border-bottom: 1px solid #c0c8d0;
-    padding-bottom: 4pt;
-    margin-top: 28pt;
-    margin-bottom: 12pt;
+    padding-bottom: 0;
+    margin-top: 40pt;
+    padding-top: 0;
+    margin-bottom: 14pt;
     color: #00838f;
+    font-weight: 700;
     page-break-after: avoid;
+    page-break-before: auto;
 }
+
 
 h3 {
     font-size: 12pt;
-    margin-top: 22pt;
-    margin-bottom: 8pt;
+    margin-top: 36pt;
+    padding-top: 0;
+    margin-bottom: 10pt;
     page-break-after: avoid;
 }
 
@@ -158,12 +164,13 @@ table {
 }
 
 th {
-    background: #0a1929;
-    color: white;
+    background: #f0f4f8;
+    color: #0a1929;
     text-align: left;
-    padding: 6pt 8pt;
-    font-weight: 600;
+    padding: 7pt 8pt;
+    font-weight: 700;
     font-size: 8pt;
+    border-bottom: 2px solid #c0c8d0;
 }
 
 td {
@@ -177,9 +184,11 @@ tr:nth-child(even) td { background: #f5f8fb; }
 /* --- HORIZONTAL RULES as section separators --- */
 hr {
     border: none;
-    border-top: 2px solid #00b8d4;
-    margin: 30pt 0;
+    background: transparent;
+    height: 0;
+    margin: 0;
     page-break-after: always;
+    visibility: hidden;
 }
 
 blockquote {
