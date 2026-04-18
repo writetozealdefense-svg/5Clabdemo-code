@@ -56,13 +56,16 @@ h1, h2, h3, h4, h5 {
 
 h1 {
     font-size: 20pt;
-    color: #0a1929;
-    font-weight: 800;
+    color: #00838f;
+    font-weight: 700;
     padding-bottom: 0;
     padding-top: 0;
     margin-top: 0;
     margin-bottom: 24pt;
     page-break-before: always;
+    border-top: 0;
+    border-bottom: 0;
+    background: transparent;
 }
 
 /* Don't page-break before the very first heading */
