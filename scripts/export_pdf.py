@@ -156,33 +156,63 @@ pre code {
     font-size: 8pt;
 }
 
-/* --- TABLES (spacing + no overlap) --- */
+/* --- TABLES: zero borders, clean zebra stripes --- */
 table {
-    border-collapse: collapse;
+    border-collapse: collapse !important;
+    border: 0 !important;
+    border-spacing: 0 !important;
     width: 100%;
-    margin-top: 8pt;
-    margin-bottom: 18pt;
+    margin-top: 10pt;
+    margin-bottom: 22pt;
     font-size: 8.5pt;
     page-break-inside: avoid;
+    background: transparent;
+}
+
+thead { background: transparent !important; }
+tbody { background: transparent !important; }
+
+thead tr, tbody tr, tr {
+    border: 0 !important;
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
 }
 
 th {
-    background: #f0f4f8;
+    background: #eef2f6;
     color: #0a1929;
     text-align: left;
-    padding: 7pt 8pt;
+    padding: 8pt 10pt;
     font-weight: 700;
     font-size: 8pt;
-    border: none;
+    letter-spacing: 0.3pt;
+    border: 0 !important;
+    border-bottom: 0 !important;
 }
 
 td {
-    padding: 5pt 8pt;
-    border: none;
+    padding: 7pt 10pt;
+    border: 0 !important;
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
     vertical-align: top;
+    background: white;
 }
 
-tr:nth-child(even) td { background: #fafcfd; }
+tr:nth-child(even) td { background: #f8fafc; }
+
+/* Emphasis on the last row of summary tables (Total row) */
+tbody tr:last-child td {
+    font-weight: 700;
+    color: #0a1929;
+    background: #eef2f6;
+}
 
 /* --- HORIZONTAL RULES: completely invisible, page break only --- */
 hr {
