@@ -127,7 +127,7 @@ code {
     background: #eef2f6;
     color: #0a1929;
     padding: 1pt 4pt;
-    border: 1px solid #d0d7de;
+    border: none;
     border-radius: 2pt;
 }
 
@@ -173,12 +173,12 @@ th {
     padding: 7pt 8pt;
     font-weight: 700;
     font-size: 8pt;
-    border-bottom: 2px solid #c0c8d0;
+    border: none;
 }
 
 td {
     padding: 5pt 8pt;
-    border: 1px solid #d0d7de;
+    border: none;
     vertical-align: top;
 }
 
@@ -195,8 +195,8 @@ hr {
 }
 
 blockquote {
-    border-left: 3pt solid #00e5ff;
-    background: #e8f5fa;
+    border: none;
+    background: #f5f8fb;
     margin: 10pt 0 16pt 0;
     padding: 8pt 12pt;
     color: #333;
