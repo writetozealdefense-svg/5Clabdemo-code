@@ -182,16 +182,29 @@ td {
     vertical-align: top;
 }
 
-tr:nth-child(even) td { background: #f5f8fb; }
+tr:nth-child(even) td { background: #fafcfd; }
 
-/* --- HORIZONTAL RULES as section separators --- */
+/* --- HORIZONTAL RULES: completely invisible, page break only --- */
 hr {
-    border: none;
-    background: transparent;
-    height: 0;
-    margin: 0;
+    border: 0 !important;
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: transparent !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    display: block;
     page-break-after: always;
-    visibility: hidden;
 }
 
 blockquote {
@@ -349,8 +362,11 @@ def convert(md_path: Path, out_path: Path, title: str = None) -> bool:
     cover_md = build_cover_markdown(title, md_path.name)
     pdf.add_section(Section(cover_md, toc=False), user_css=COVER_CSS)
 
-    # Content
+    # Content — strip standalone --- horizontal rules (they render as dark stripes
+    # in markdown-pdf/PyMuPDF even with visibility:hidden; h1 page-break handles breaks)
+    import re as _re
     content = md_path.read_text(encoding="utf-8")
+    content = _re.sub(r'(?m)^\s*-{3,}\s*$', '', content)
     pdf.add_section(Section(content, toc=True), user_css=CSS)
 
     try:
