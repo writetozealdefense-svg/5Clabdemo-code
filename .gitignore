@@ -9,6 +9,9 @@ terraform/.terraform.lock.hcl
 # PDF build output (generated locally, not tracked)
 build/
 
+# Accidental nested clone
+5Clabdemo-code/
+
 # Python
 __pycache__/
 *.py[cod]
