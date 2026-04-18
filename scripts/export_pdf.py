@@ -38,38 +38,83 @@ LOGO_SVG = ASSETS / "zeal-defense-logo.svg"
 CSS = """
 @page {
     size: A4;
-    margin: 20mm 18mm;
+    margin: 22mm 18mm 25mm 18mm;
 }
 
 body {
     font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 10.5pt;
-    line-height: 1.55;
+    font-size: 10pt;
+    line-height: 1.6;
     color: #1a1a1a;
 }
 
-h1, h2, h3, h4, h5 { color: #0a1929; page-break-after: avoid; }
+/* --- HEADINGS WITH PAGE BREAKS --- */
+h1, h2, h3, h4, h5 {
+    color: #0a1929;
+    page-break-after: avoid;
+}
+
 h1 {
-    font-size: 22pt;
+    font-size: 20pt;
     border-bottom: 3px solid #00b8d4;
-    padding-bottom: 6px;
-    margin-top: 24pt;
+    padding-bottom: 8pt;
+    padding-top: 10pt;
+    margin-top: 0;
+    margin-bottom: 14pt;
+    page-break-before: always;
 }
+
+/* Don't page-break before the very first heading */
+h1:first-of-type,
+body > h1:first-child {
+    page-break-before: auto;
+}
+
 h2 {
-    font-size: 16pt;
+    font-size: 15pt;
     border-bottom: 1px solid #c0c8d0;
-    padding-bottom: 3px;
-    margin-top: 18pt;
+    padding-bottom: 4pt;
+    margin-top: 28pt;
+    margin-bottom: 12pt;
     color: #00838f;
+    page-break-after: avoid;
 }
-h3 { font-size: 13pt; margin-top: 14pt; }
-h4 { font-size: 11pt; color: #555; }
 
-p, li { margin: 4pt 0; }
+h3 {
+    font-size: 12pt;
+    margin-top: 22pt;
+    margin-bottom: 8pt;
+    page-break-after: avoid;
+}
 
+h4 {
+    font-size: 10.5pt;
+    color: #555;
+    margin-top: 16pt;
+    margin-bottom: 6pt;
+}
+
+/* --- PARAGRAPHS AND LISTS --- */
+p {
+    margin: 6pt 0 10pt 0;
+    orphans: 3;
+    widows: 3;
+}
+
+li {
+    margin: 3pt 0;
+    orphans: 2;
+    widows: 2;
+}
+
+ul, ol {
+    margin-bottom: 12pt;
+}
+
+/* --- INLINE CODE --- */
 code {
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 9pt;
+    font-size: 8.5pt;
     background: #eef2f6;
     color: #0a1929;
     padding: 1pt 4pt;
@@ -77,56 +122,92 @@ code {
     border-radius: 2pt;
 }
 
+/* --- CODE BLOCKS (crucial fix: spacing + no overlap) --- */
 pre {
     background: #0a1929;
     color: #e2e8f0;
-    padding: 10pt;
+    padding: 12pt 14pt;
     border-left: 3pt solid #00e5ff;
-    border-radius: 3pt;
-    font-size: 8.5pt;
+    border-radius: 4pt;
+    font-size: 8pt;
+    line-height: 1.5;
     white-space: pre-wrap;
     word-wrap: break-word;
     page-break-inside: avoid;
+    margin-top: 8pt;
+    margin-bottom: 18pt;
 }
+
 pre code {
     background: transparent;
     border: none;
     color: #e2e8f0;
     padding: 0;
+    font-size: 8pt;
 }
 
+/* --- TABLES (spacing + no overlap) --- */
 table {
     border-collapse: collapse;
     width: 100%;
-    margin: 8pt 0;
-    font-size: 9pt;
+    margin-top: 8pt;
+    margin-bottom: 18pt;
+    font-size: 8.5pt;
     page-break-inside: avoid;
 }
+
 th {
     background: #0a1929;
     color: white;
     text-align: left;
     padding: 6pt 8pt;
     font-weight: 600;
+    font-size: 8pt;
 }
+
 td {
     padding: 5pt 8pt;
     border: 1px solid #d0d7de;
     vertical-align: top;
 }
+
 tr:nth-child(even) td { background: #f5f8fb; }
+
+/* --- HORIZONTAL RULES as section separators --- */
+hr {
+    border: none;
+    border-top: 2px solid #00b8d4;
+    margin: 30pt 0;
+    page-break-after: always;
+}
 
 blockquote {
     border-left: 3pt solid #00e5ff;
     background: #e8f5fa;
-    margin: 8pt 0;
-    padding: 6pt 10pt;
+    margin: 10pt 0 16pt 0;
+    padding: 8pt 12pt;
     color: #333;
+    page-break-inside: avoid;
 }
 
 a { color: #00838f; text-decoration: none; }
 
-hr { border: none; border-top: 1px solid #c0c8d0; margin: 16pt 0; }
+/* --- STRONG / BOLD labels in analysis sections --- */
+strong {
+    color: #0a1929;
+}
+
+/* --- Ensure content after pre/table doesn't overlap --- */
+pre + p, pre + h2, pre + h3, pre + h4,
+table + p, table + h2, table + h3, table + h4,
+pre + blockquote, table + blockquote {
+    margin-top: 16pt;
+}
+
+/* --- Analysis labels --- */
+p strong:first-child {
+    color: #00838f;
+}
 
 ul, ol { margin: 4pt 0; padding-left: 20pt; }
 """
