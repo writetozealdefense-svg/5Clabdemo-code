@@ -135,7 +135,8 @@ pre {
     word-wrap: break-word;
     page-break-inside: avoid;
     margin-top: 8pt;
-    margin-bottom: 18pt;
+    margin-bottom: 28pt;
+    clear: both;
 }
 
 pre code {
